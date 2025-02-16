@@ -108,7 +108,6 @@ const ManageUser = ({ dispatch }) => {
       }
     })
   }
-  console.log(roleName)
   return (
     <section className="mb-[200px]">
       <Title title="Quản lý thành viên"></Title>

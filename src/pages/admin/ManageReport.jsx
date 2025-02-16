@@ -1,36 +1,36 @@
-import { apiDeleteReport, apiGetReports } from "@/apis/report"
-import { Pagination, Title } from "@/components"
-import path from "@/ultils/path"
-import moment from "moment"
-import React, { useCallback, useEffect, useState } from "react"
-import { AiFillDelete } from "react-icons/ai"
-import { useSearchParams } from "react-router-dom"
-import Swal from "sweetalert2"
+import { apiDeleteReport, apiGetReports } from "@/apis/report";
+import { Pagination, Title } from "@/components";
+import path from "@/ultils/path";
+import moment from "moment";
+import React, { useCallback, useEffect, useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
+import { useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ManageReport = () => {
-  const [update, setUpdate] = useState(false)
-  const [counts, setCounts] = useState(0)
-  const [searchParams] = useSearchParams()
-  const [reports, setReports] = useState()
+  const [update, setUpdate] = useState(false);
+  const [counts, setCounts] = useState(0);
+  const [searchParams] = useSearchParams();
+  const [reports, setReports] = useState();
   const render = useCallback(() => {
-    setUpdate(!update)
-  }, [update])
+    setUpdate(!update);
+  }, [update]);
   const fetchReports = async (searchParamsObject) => {
-    const response = await apiGetReports(searchParamsObject)
+    const response = await apiGetReports(searchParamsObject);
     if (response.data) {
-      setReports(response.data)
-      setCounts(response.count)
+      setReports(response.data);
+      setCounts(response.count);
     }
-  }
+  };
   useEffect(() => {
     const { page, ...searchParamsObject } = Object.fromEntries([
       ...searchParams,
-    ])
-    if (page && Number(page)) searchParamsObject.page = Number(page) - 1
-    else searchParamsObject.page = 0
-    searchParamsObject.limit = 5
-    fetchReports(searchParamsObject)
-  }, [update, searchParams])
+    ]);
+    if (page && Number(page)) searchParamsObject.page = Number(page) - 1;
+    else searchParamsObject.page = 0;
+    searchParamsObject.limit = 5;
+    fetchReports(searchParamsObject);
+  }, [update, searchParams]);
   const handleDeleteReport = (id) => {
     Swal.fire({
       icon: "warning",
@@ -42,14 +42,14 @@ const ManageReport = () => {
       cancelButtonText: "Quay lại",
     }).then(async (rs) => {
       if (rs.isConfirmed) {
-        const response = await apiDeleteReport({ ids: [id] })
+        const response = await apiDeleteReport({ ids: [id] });
         if (response.success) {
-          toast.success(response.message)
-          render()
-        } else toast.error(response.message)
+          toast.success(response.message);
+          render();
+        } else toast.error(response.message);
       }
-    })
-  }
+    });
+  };
   return (
     <>
       <Title title="Quản lý báo cáo vi phạm"></Title>
@@ -104,7 +104,7 @@ const ManageReport = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ManageReport
+export default ManageReport;

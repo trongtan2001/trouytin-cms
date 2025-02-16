@@ -184,7 +184,6 @@ const ManagerService = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(form);
         if (validateService()) {
             if (form.serviceId != '') {
                 // edit
@@ -239,7 +238,6 @@ const ManagerService = () => {
         setCurrentHouseId(value)
         houseData.forEach(house => {
             if (house.houseId == value) {
-                console.log(house.rooms[0].id);
                 reloadRoomService(house.rooms[0].id)
             }
         })
@@ -271,7 +269,6 @@ const ManagerService = () => {
     const confirmDelete = (status, type) => {
         if (status) {
             //delete service
-            console.log(checkedServiceIds);
             deleteServiceHouse(checkedServiceIds).then(response => {
                 // Handle the response data here
                 if (!response.success) {

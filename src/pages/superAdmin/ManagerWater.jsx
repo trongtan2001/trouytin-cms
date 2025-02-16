@@ -34,7 +34,6 @@ const ManagerWater = () => {
   useEffect(() => {
     getListHouse().then(response => {
       // Handle the response data here
-      console.log(response);
       setHouseData(response);
       setCurrentHouseId(currentHouseId ? currentHouseId : response[0].houseId)
       setCurrentRoomId(currentRoomId ? currentRoomId : response[0].rooms[0].id);
@@ -49,7 +48,6 @@ const ManagerWater = () => {
   const getRoomDataById = (id) => {
     getRoomById(id).then(response => {
       // Handle the response data here
-      console.log(response);
       setWaterData(response);
     }).catch(error => {
       // Handle any errors that occurred during the request

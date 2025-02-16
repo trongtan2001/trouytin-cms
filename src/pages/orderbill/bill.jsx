@@ -11,7 +11,6 @@ const BillOrderPage = () => {
 
     useEffect(() => {
         getOrderBillById(orderId).then((bill) => {
-            console.log(bill);
             setBillData(bill)
         }).catch((error) => {
         })

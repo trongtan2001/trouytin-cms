@@ -87,7 +87,6 @@ const Dashboard = () => {
     apiPostStatus()
       .then(data => {
         const { percentApproved, percentRejected, percentReview } = data;
-        console.log("percentApproved: " + percentApproved);
         // Update state
         setPostStatusPercent([percentApproved, percentRejected, percentReview]);
       })
@@ -99,7 +98,6 @@ const Dashboard = () => {
     apiUserStatus()
       .then(data => {
         const { totalAccount, percentUser, totalUser, percentManage, totalManage, percentUltiManage, totalUltiManage } = data;
-        console.log(data);
         setUserStatusPercent([totalAccount, percentUser, totalUser, percentManage, totalManage, percentUltiManage, totalUltiManage]);
       })
       .catch(error => {

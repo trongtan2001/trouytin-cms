@@ -1,11 +1,11 @@
-import React from "react"
-import { useDispatch } from "react-redux"
-import { useNavigate, useLocation } from "react-router-dom"
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const WithBaseTopping = (Component) => (props) => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <Component
@@ -14,7 +14,7 @@ const WithBaseTopping = (Component) => (props) => {
       dispatch={dispatch}
       navigate={navigate}
     />
-  )
-}
+  );
+};
 
-export default WithBaseTopping
+export default WithBaseTopping;

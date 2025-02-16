@@ -46,7 +46,6 @@ const VerifyOtpUpgradeRole = ({ navigate, dispatch }) => {
   }
   useEffect(() => {
     intervelId = setInterval(() => {
-      console.log("here")
       if (countdown > 0) setCountdown((prev) => prev - 1)
       else {
         clearInterval(intervelId)

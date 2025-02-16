@@ -6,24 +6,24 @@ import {
   SelectLib,
   TextField,
   Title,
-} from "@/components"
-import React, { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import withBaseTopping from "@/hocs/WithBaseTopping"
-import { useSelector } from "react-redux"
-import { targets } from "@/ultils/constant"
-import clsx from "clsx"
-import useDebounce from "@/hooks/useDebounce"
+} from "@/components";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import withBaseTopping from "@/hocs/WithBaseTopping";
+import { useSelector } from "react-redux";
+import { targets } from "@/ultils/constant";
+import clsx from "clsx";
+import useDebounce from "@/hooks/useDebounce";
 import {
   apiGetLngLatFromAddress,
   apiGetPostTypes,
   apiGetProvince,
-} from "@/apis/app"
-import { toast } from "react-toastify"
-import { getBase64 } from "@/ultils/fn"
-import { apiCreateNewPost } from "@/apis/post"
-import path from "@/ultils/path"
-import { ImBin } from "react-icons/im"
+} from "@/apis/app";
+import { toast } from "react-toastify";
+import { getBase64 } from "@/ultils/fn";
+import { apiCreateNewPost } from "@/apis/post";
+import path from "@/ultils/path";
+import { ImBin } from "react-icons/im";
 
 const CreatePost = ({ navigate }) => {
   const {
@@ -34,100 +34,105 @@ const CreatePost = ({ navigate }) => {
     reset,
     setValue,
     handleSubmit: validate,
-  } = useForm()
-  const { provinces } = useSelector((state) => state.app)
-  const [postTypes, setPostTypes] = useState([])
-  const [districts, setDistricts] = useState([])
-  const [wards, setWards] = useState([])
-  const [center, setCenter] = useState(null)
-  const [zoom, setZoom] = useState(10)
-  const [isLoading, setIsLoading] = useState(false)
-  const [imagesBase64, setImagesBase64] = useState([])
-  const [imageHover, setImageHover] = useState()
+  } = useForm();
+  const { provinces } = useSelector((state) => state.app);
+  const [postTypes, setPostTypes] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [center, setCenter] = useState(null);
+  const [zoom, setZoom] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imagesBase64, setImagesBase64] = useState([]);
+  const [imageHover, setImageHover] = useState();
 
   const [rotation, setRotation] = useState();
 
-  const province = watch("province")
-  const district = watch("district")
-  const ward = watch("ward")
-  const post_type = watch("post_type")
-  const images = watch("images")
-  const address = watch("address")
-  const street = watch("street")
-  const object = watch("object")
-  const description = watch("description")
-  const convenient = watch("convenient")
+  const province = watch("province");
+  const district = watch("district");
+  const ward = watch("ward");
+  const post_type = watch("post_type");
+  const images = watch("images");
+  const address = watch("address");
+  const street = watch("street");
+  const object = watch("object");
+  const description = watch("description");
+  const convenient = watch("convenient");
   const fetLngLat = async (payload) => {
     try {
       const response = await apiGetLngLatFromAddress(payload);
       const features = response.data?.features || [];
-      
+
       if (response.status === 200 && features.length > 0) {
-          const { lat, lon } = features[0]?.properties || {};
-          if (lat && lon) {
-              setCenter([lat, lon]);
-              setRotation(`${lat},${lon}`);
-              return;
-          }
+        const { lat, lon } = features[0]?.properties || {};
+        if (lat && lon) {
+          setCenter([lat, lon]);
+          setRotation(`${lat},${lon}`);
+          return;
+        }
       }
       console.warn("Dữ liệu không hợp lệ:", response.data);
-  } catch (error) {
+    } catch (error) {
       console.error("Lỗi khi fetch tọa độ:", error);
-  }
-  setCenter([0, 0]); 
-  setRotation("0,0"); 
-  }
-  const convertFileToBase64 = async (file) => {
-    const base64 = await getBase64(file)
-    if (base64) setImagesBase64((prev) => [...prev, base64])
-  }
-  useEffect(() => {
-    setImagesBase64([])
-    if (images && images instanceof FileList)
-      for (let file of images) convertFileToBase64(file)
-  }, [images])
-  const getDataProvince = async (provinceCode) => {
-    const response = await apiGetProvince(provinceCode)
-    if (response.status === 200) {
-      setDistricts(response.data?.districts)
     }
-  }
+    setCenter([0, 0]);
+    setRotation("0,0");
+  };
+  const convertFileToBase64 = async (file) => {
+    const base64 = await getBase64(file);
+    if (base64) setImagesBase64((prev) => [...prev, base64]);
+  };
+  useEffect(() => {
+    setImagesBase64([]);
+    if (images && images instanceof FileList)
+      for (let file of images) convertFileToBase64(file);
+  }, [images]);
+  const getDataProvince = async (provinceCode) => {
+    const response = await apiGetProvince(provinceCode);
+    if (response.status === 200) {
+      setDistricts(response.data?.districts);
+    }
+  };
+
   const fetchPostTypes = async () => {
-    const response = await apiGetPostTypes()
-    setPostTypes(response || [])
-  }
+    const response = await apiGetPostTypes();
+    setPostTypes(response || []);
+  };
+
   useEffect(() => {
     window.navigator.geolocation.getCurrentPosition((rs) => {
       if (rs && rs.coords) {
-        const ps = [rs.coords.latitude, rs.coords.longitude]
-        setCenter(ps)
+        const ps = [rs.coords.latitude, rs.coords.longitude];
+        setCenter(ps);
       }
-    })
-    fetchPostTypes()
-  }, [])
+    });
+    fetchPostTypes();
+  }, []);
+
   useEffect(() => {
     if (province) {
-      getDataProvince(province.code)
+      getDataProvince(province.code);
     }
-    setValue("district", "")
-    setValue("ward", "")
-    setValue("street", "")
-    setDistricts([])
-    setWards([])
-  }, [province])
+    setValue("district", "");
+    setValue("ward", "");
+    setValue("street", "");
+    setDistricts([]);
+    setWards([]);
+  }, [province]);
+
   useEffect(() => {
-    if (district) setWards(district.wards)
-  }, [district])
-  const debounceValue = useDebounce(street, 800)
+    if (district) setWards(district.wards);
+  }, [district]);
+  const debounceValue = useDebounce(street, 800);
+
   useEffect(() => {
     const lengthAddress = Object.values({
       province: province?.name,
       street,
       ward: ward?.name,
       district: district?.name,
-    }).filter((el) => !el === false).length
-    if (lengthAddress > 2) setZoom(14)
-    else setZoom(12)
+    }).filter((el) => !el === false).length;
+    if (lengthAddress > 2) setZoom(14);
+    else setZoom(12);
     const text = clsx(
       debounceValue,
       debounceValue && ",",
@@ -136,30 +141,30 @@ const CreatePost = ({ navigate }) => {
       district?.name,
       district?.name && ",",
       province?.name
-    )
+    );
     const textModified = text
       ?.split(",")
       ?.map((el) => el.trim())
-      ?.join(", ")
-    setValue("address", textModified)
+      ?.join(", ");
+    setValue("address", textModified);
     if (textModified)
       fetLngLat({
         text: textModified,
         apiKey: import.meta.env.VITE_MAP_API_KEY,
-      })
-  }, [province, district, ward, debounceValue])
+      });
+  }, [province, district, ward, debounceValue]);
   const removeFileFromFileList = (index, filesId) => {
-    const dt = new DataTransfer()
-    const input = document.getElementById(filesId)
-    const { files } = input
+    const dt = new DataTransfer();
+    const input = document.getElementById(filesId);
+    const { files } = input;
 
     for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      if (index !== i) dt.items.add(file) // here you exclude the file. thus removing it.
+      const file = files[i];
+      if (index !== i) dt.items.add(file); // here you exclude the file. thus removing it.
     }
-    setValue("images", dt.files)
+    setValue("images", dt.files);
     // input.files = dt.files
-  }
+  };
   // Handle Submit Form
   const handleSubmit = async () => {
     const {
@@ -178,7 +183,7 @@ const CreatePost = ({ navigate }) => {
       object,
       images,
       ...dto
-    } = getValues()
+    } = getValues();
     const roomDto = {
       emptyRoom,
       numberRoom,
@@ -187,7 +192,7 @@ const CreatePost = ({ navigate }) => {
       electricityPrice,
       acreage,
       price,
-    }
+    };
     const payload = {
       description,
       roomDto,
@@ -196,21 +201,28 @@ const CreatePost = ({ navigate }) => {
       rotation: rotation,
       ...dto,
       convenient: convenient?.join(","),
-    }
+    };
     // setIsLoading(true)
-    const formData = new FormData()
-    formData.append("postDto", JSON.stringify(payload))
+    const formData = new FormData();
+    formData.append("postDto", JSON.stringify(payload));
     if (images && images instanceof FileList) {
-      for (let image of images) formData.append("images", image)
+      for (let image of images) formData.append("images", image);
     }
-    setIsLoading(true)
-    const response = await apiCreateNewPost(formData)
-    setIsLoading(false)
-    if (response) {
-      toast.success("Tạo tin đăng thành công")
-      navigate("/" + path.MANAGER + "/" + path.MANAGE_POST)
-    } else toast.error("Tạo tin đăng không thành công, hãy thử lại")
-  }
+    try {
+      setIsLoading(true);
+      const response = await apiCreateNewPost(formData);
+      setIsLoading(false);
+      if (response) {
+        toast.success("Tạo tin đăng thành công");
+        navigate("/" + path.MANAGER + "/" + path.MANAGE_POST);
+      } else {
+        toast.error("Tạo tin đăng không thành công, hãy thử lại");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+    }
+  };
   return (
     <section className="pb-[200px]">
       <Title title="Tạo mới tin đăng">
@@ -508,7 +520,7 @@ const CreatePost = ({ navigate }) => {
         </div>
       </form>
     </section>
-  )
-}
+  );
+};
 
-export default withBaseTopping(CreatePost)
+export default withBaseTopping(CreatePost);
